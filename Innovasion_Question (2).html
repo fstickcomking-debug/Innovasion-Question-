@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Innovasion Question</title>
+<style>
+:root{--bg:#101522;--panel:#1b2436;--panel2:#242f45;--text:#f4f7ff;--muted:#aab6cf;--blue:#7c9cff;--green:#58d6a0;--red:#ff7886;--gold:#ffd36a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#26365a,#101522 55%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+main{max-width:850px;margin:auto;padding:18px}.brand{text-align:center;padding:18px 8px 12px}.brand .logo{font-size:42px}.brand h1{margin:4px 0;font-size:clamp(27px,6vw,42px);letter-spacing:.4px}.brand p{color:var(--muted);margin:4px 0}
+.panel{background:rgba(27,36,54,.96);border:1px solid #3a4968;border-radius:20px;padding:18px;margin:12px 0;box-shadow:0 12px 32px #0003}.hidden{display:none!important}
+h2,h3{margin:0 0 12px}label{display:block;color:#d8e0f3;font-weight:650;margin:12px 0 6px}input,select,textarea{width:100%;background:#101827;border:1px solid #52617f;border-radius:11px;color:white;padding:12px;font:inherit}textarea{min-height:76px;resize:vertical}
+button{border:0;border-radius:12px;padding:12px 15px;font:inherit;font-weight:750;cursor:pointer;color:#101522;background:var(--blue);margin:5px 4px 3px 0}button.secondary{background:#36435e;color:white}button.green{background:var(--green)}button.gold{background:var(--gold)}button.danger{background:var(--red)}button:disabled{opacity:.4;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.mode{padding:20px 12px;text-align:center;background:#26334d;border:1px solid #4b5f87;border-radius:16px;cursor:pointer}.mode strong{display:block;font-size:18px}.mode span{font-size:13px;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1;min-width:120px}.stat{background:#101827;border-radius:12px;padding:10px;text-align:center}.stat strong{display:block;font-size:22px}.muted{color:var(--muted);font-size:14px}.player-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}.player{background:#111a2a;border:1px solid #465572;border-radius:13px;padding:11px;text-align:center;overflow-wrap:anywhere}.player.active{border:2px solid var(--gold);box-shadow:0 0 0 2px #ffd36a22}.player .emoji{font-size:22px;min-height:28px}.pill{display:inline-block;border-radius:999px;padding:5px 10px;background:#33415e;color:#e5ebff;font-size:12px;font-weight:700}.question{font-size:20px;font-weight:800;line-height:1.4;background:#111a2a;border-radius:14px;padding:16px;margin:12px 0}.notice{padding:12px;border-radius:12px;background:#26334d;color:#e8edff;margin:10px 0}.shopitem{border:1px solid #435371;background:#121b2b;border-radius:14px;padding:12px;margin:9px 0}.shopitem h3{margin:0 0 5px}.shopitem p{margin:0;color:var(--muted);font-size:14px}.shopitem button{margin-top:9px}.tiny{font-size:12px;color:var(--muted)}.timer{font-size:24px;font-weight:900;color:var(--gold)}footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
+</style>
+</head>
+<body>
+<main>
+<header class="brand"><div class="logo">💡❓</div><h1>Innovasion Question</h1><p>Putar host • Buat pertanyaan • Jawab cepat • Kumpulkan poin & EXP</p></header>
+
+<section id="home" class="panel">
+<h2>🎮 Pilih mode main</h2>
+<div class="grid">
+<div class="mode" onclick="showSetup('friends')"><strong>👥 Main dengan teman</strong><span>2–4 pemain, bergantian di satu perangkat</span></div>
+<div class="mode" onclick="showSetup('ai')"><strong>🤖 Main dengan AI</strong><span>Host dipilih acak: kamu atau AI</span></div>
+</div>
+<div class="notice">💡 Tips: game ini berjalan langsung di Chrome. Mode teman saat ini dimainkan bergantian pada perangkat yang sama.</div>
+<button class="secondary" onclick="toggleTutorial()">📘 Tutorial</button>
+<button class="secondary" onclick="showShop()">🛒 Pasar</button>
+<div id="tutorial" class="notice hidden">
+<b>Cara bermain</b><ol><li>Pilih mode, masukkan nama, lalu mulai.</li><li>Host dipilih secara acak. Jika namamu terpilih, buat pertanyaan dan masukkan jawaban rahasia. Jika AI terpilih, AI akan membuat pertanyaan.</li><li>Pemain yang mendapat giliran mengetik jawaban. Host tidak menjawab pertanyaannya sendiri.</li><li>Jawaban benar mendapat ✅ dan poin/EXP sesuai waktu. Jawaban salah mendapat ❌.</li><li>Gunakan Pasar untuk membeli bantuan dengan poin atau EXP.</li></ol>
+<b>Hadiah jawaban benar</b><br>≤ 1 menit: 20 poin + 10 EXP<br>≤ 1,5 menit: 18 poin + 10 EXP<br>≤ 2 menit: 16 poin + 9 EXP<br>≤ 2,5 menit: 13 poin + 8 EXP<br>≤ 3 menit: 10 poin + 8 EXP<br>Lebih dari 3 menit: 4 poin + 1 EXP
+</div>
+</section>
+
+<section id="setup" class="panel hidden">
+<h2 id="setupTitle">Persiapan permainan</h2>
+<div id="friendsSetup" class="hidden">
+<label>Jumlah pemain (termasuk kamu)</label><select id="playerCount"><option value="2">2 pemain</option><option value="3">3 pemain</option><option value="4">4 pemain</option></select>
+<div id="nameFields"></div>
+</div>
+<div id="aiSetup" class="hidden">
+<label>Nama kamu</label><input id="soloName" maxlength="18" placeholder="Masukkan nama pemain">
+<p class="muted">Kamu akan bermain melawan AI. Host dipilih acak antara kamu dan AI.</p>
+</div>
+<button class="green" onclick="startGame()">🚀 Mulai permainan</button><button class="secondary" onclick="goHome()">Kembali</button>
+</section>
+
+<section id="game" class="hidden">
+<div class="panel">
+<div class="row">
+<div class="stat"><span class="muted">Poin</span><strong id="points">0</strong></div>
+<div class="stat"><span class="muted">EXP</span><strong id="exp">0</strong></div>
+<div class="stat"><span class="muted">Giliran</span><strong id="round">1</strong></div>
+</div>
+<div class="row" style="margin-top:10px"><button class="secondary" onclick="showShop()">🛒 Pasar</button><button class="secondary" onclick="toggleTutorial()">📘 Tutorial</button><button class="danger" onclick="goHome()">Keluar</button></div>
+</div>
+<div class="panel"><h2>👤 Pemain</h2><div id="players" class="player-list"></div></div>
+<div class="panel">
+<div class="row"><h2 style="margin:0">🎲 Host terpilih</h2><span id="hostBadge" class="pill">Mengacak...</span></div>
+<div id="status" class="notice">Menyiapkan giliran...</div>
+<div id="hostForm" class="hidden">
+<label>Buat pertanyaan</label><textarea id="questionInput" placeholder="Tulis pertanyaanmu..."></textarea>
+<label>Jawaban yang benar (rahasia)</label><input id="answerInput" placeholder="Masukkan jawaban benar">
+<button class="green" onclick="publishQuestion()">Kirim pertanyaan</button>
+</div>
+<div id="questionArea" class="hidden">
+<div class="question" id="questionText"></div>
+<div class="row"><div><span class="muted">Waktu berjalan</span><div id="timer" class="timer">00:00</div></div><div><span class="muted">Penjawab sekarang</span><h3 id="answererName">-</h3></div></div>
+<div id="clueBox" class="notice hidden"></div>
+<label>Jawaban kamu</label><input id="guessInput" placeholder="Ketik jawaban..." autocomplete="off">
+<div class="row"><button class="green" onclick="submitGuess()">Kirim jawaban</button><button class="gold" onclick="useItem('skip')">⏭ Skip (18 poin)</button></div>
+<div id="feedback" class="notice hidden"></div>
+</div>
+<div id="resultArea" class="hidden"><div class="notice" id="resultText"></div><button class="green" onclick="nextRound()">➡️ Lanjut putaran</button></div>
+</div>
+</section>
+
+<section id="market" class="panel hidden">
+<h2>🛒 Pasar</h2><p class="muted">Beli item untuk membantu di putaran aktif.</p>
+<div class="row"><div class="stat"><span class="muted">Poin</span><strong id="marketPoints">0</strong></div><div class="stat"><span class="muted">EXP</span><strong id="marketExp">0</strong></div></div>
+<div class="shopitem"><h3>💡 Lampu jawaban — 5 poin</h3><p>Menampilkan jawaban yang benar untuk putaran aktif.</p><button onclick="useItem('lamp')">Beli & gunakan</button></div>
+<div class="shopitem"><h3>🔎 Clue jawaban — 8 poin</h3><p>Menampilkan petunjuk singkat tentang jawaban.</p><button onclick="useItem('clue')">Beli & gunakan</button></div>
+<div class="shopitem"><h3>🔄 Ganti pertanyaan — 13 poin</h3><p>Host harus membuat pertanyaan baru; pertanyaan yang sudah dipakai tidak boleh dipakai lagi dalam sesi ini.</p><button onclick="useItem('change')">Beli & gunakan</button></div>
+<div class="shopitem"><h3>⏭ Skip — 18 poin</h3><p>Melewati giliranmu dan memberikan kesempatan ke pemain berikutnya.</p><button onclick="useItem('skip')">Beli & gunakan</button></div>
+<div class="shopitem"><h3>🎲 Muat ulang host — 20 EXP</h3><p>Memulai putaran baru dan mengacak host lagi.</p><button onclick="useItem('reload')">Beli & gunakan</button></div>
+<button class="secondary" onclick="closeShop()">Kembali ke game</button>
+</section>
+<footer>Innovasion Question • Game lokal untuk Chrome</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let mode='friends',players=[],hostIndex=-1,answererIndex=-1,points=0,exp=0,round=1,startedAt=0,timerHandle=null,question='',answer='',usedQuestions=[],turnCount=0,clueUsed=false,roundActive=false,homeReturn='home';
+const bank=[
+{q:'Planet apa yang dikenal sebagai Planet Merah?',a:'mars',clue:'Planet keempat dari Matahari.'},
+{q:'Hewan apa yang mengalami metamorfosis dari ulat?',a:'kupu-kupu',clue:'Serangga dengan sayap berwarna-warni.'},
+{q:'Berapa hasil 7 × 8?',a:'56',clue:'Lebih besar dari 50 dan lebih kecil dari 60.'},
+{q:'Apa ibu kota Jepang?',a:'tokyo',clue:'Kota besar yang terkenal dengan Shibuya.'},
+{q:'Organ apa yang memompa darah ke seluruh tubuh?',a:'jantung',clue:'Berdetak di dada.'},
+{q:'Air membeku pada suhu berapa derajat Celsius?',a:'0',clue:'Titik beku air murni.'},
+{q:'Apa nama satelit alami Bumi?',a:'bulan',clue:'Terlihat di langit malam.'},
+{q:'Berapa jumlah sisi pada segitiga?',a:'3',clue:'Lebih sedikit dari persegi.'},
+{q:'Tumbuhan menyerap gas apa untuk fotosintesis?',a:'karbon dioksida',clue:'Gas yang ditulis CO₂.'},
+{q:'Apa hewan darat tercepat?',a:'citah',clue:'Kucing besar berbintik.'},
+{q:'Apa lawan kata dari “panas”?',a:'dingin',clue:'Kata untuk suhu rendah.'},
+{q:'Berapa jumlah hari dalam satu minggu?',a:'7',clue:'Dari Senin sampai Minggu.'},
+{q:'Benda langit apa yang menghasilkan cahaya dan panas bagi Bumi?',a:'matahari',clue:'Pusat tata surya kita.'},
+{q:'Apa nama proses tumbuhan membuat makanan dengan bantuan cahaya?',a:'fotosintesis',clue:'Dimulai dengan “foto-”.'},
+{q:'Berapa hasil 12 + 15?',a:'27',clue:'Dua puluh ditambah tujuh.'}
+];
+function hideAll(){['home','setup','game','market'].forEach(id=>$(id).classList.add('hidden'))}
+function goHome(){clearInterval(timerHandle);roundActive=false;hideAll();$('home').classList.remove('hidden')}
+function toggleTutorial(){let el=$('tutorial');el.classList.toggle('hidden')}
+function showSetup(which){mode=which;hideAll();$('setup').classList.remove('hidden');$('friendsSetup').classList.toggle('hidden',which!=='friends');$('aiSetup').classList.toggle('hidden',which!=='ai');$('setupTitle').textContent=which==='friends'?'👥 Siapkan pemain':'🤖 Siapkan mode AI';if(which==='friends')renderNameFields()}
+function renderNameFields(){let n=+$('playerCount').value;let box=$('nameFields');box.innerHTML='';for(let i=0;i<n;i++){let label=document.createElement('label');label.textContent='Nama pemain '+(i+1);let input=document.createElement('input');input.maxLength=18;input.placeholder=i===0?'Nama kamu':'Nama teman '+(i+1);input.value=['R','E','T','V'][i]||'';input.id='pname'+i;box.append(label,input)}}
+$('playerCount').addEventListener('change',renderNameFields);
+function startGame(){players=[];points=0;exp=0;round=1;usedQuestions=[];turnCount=0;
+ if(mode==='friends'){let n=+$('playerCount').value;for(let i=0;i<n;i++){let name=$('pname'+i).value.trim()||('Pemain '+(i+1));if(players.some(p=>p.name.toLowerCase()===name.toLowerCase())){alert('Nama pemain harus berbeda.');return}players.push({name,score:0,exp:0,emoji:'⏳',ai:false})}}
+ else {let name=$('soloName').value.trim()||'R';players=[{name,score:0,exp:0,emoji:'⏳',ai:false},{name:'AI',score:0,exp:0,emoji:'🤖',ai:true}]}
+ hideAll();$('game').classList.remove('hidden');startRound(true);updateStats()}
+function updateStats(){$('points').textContent=points;$('exp').textContent=exp;$('marketPoints').textContent=points;$('marketExp').textContent=exp;$('round').textContent=round;
+ $('players').innerHTML='';players.forEach((p,i)=>{let d=document.createElement('div');d.className='player'+(i===hostIndex?' active':'');d.innerHTML='<div class="emoji">'+p.emoji+'</div><b></b><div class="tiny">'+(i===hostIndex?'HOST':(i===answererIndex?'MENJAWAB':'PEMAIN'))+'</div><div class="tiny">Poin '+p.score+' • EXP '+p.exp+'</div>';d.querySelector('b').textContent=p.name;$('players').append(d)})}
+function startRound(chooseHost){clearInterval(timerHandle);roundActive=false;$('hostForm').classList.add('hidden');$('questionArea').classList.add('hidden');$('resultArea').classList.add('hidden');$('feedback').classList.add('hidden');$('clueBox').classList.add('hidden');$('guessInput').value='';$('questionInput').value='';$('answerInput').value='';clueUsed=false;
+ if(chooseHost){hostIndex=Math.floor(Math.random()*players.length);if(mode==='ai'&&players.length===2){hostIndex=Math.random()<.5?0:1}}
+ answererIndex=nextNonHost(hostIndex,hostIndex);$('hostBadge').textContent=players[hostIndex].name;$('status').textContent=players[hostIndex].ai?'AI terpilih menjadi host. AI sedang menyiapkan pertanyaan…':players[hostIndex].name+' terpilih menjadi host.';
+ updateStats();
+ if(players[hostIndex].ai){let item;let choices=bank.filter(x=>!usedQuestions.includes(x.q));if(!choices.length){usedQuestions=[];choices=bank}item=choices[Math.floor(Math.random()*choices.length)];question=item.q;answer=item.a;currentClue=item.clue;usedQuestions.push(question);setTimeout(showQuestion,350)}
+ else {$('hostForm').classList.remove('hidden');$('status').textContent=players[hostIndex].name+' adalah host. Buat pertanyaan dan masukkan jawaban yang benar.'}
+}
+function nextNonHost(from,skipIndex){for(let k=1;k<=players.length;k++){let idx=(from+k)%players.length;if(idx!==hostIndex && idx!==skipIndex)return idx}return -1}
+let currentClue='';
+function publishQuestion(){let q=$('questionInput').value.trim(),a=$('answerInput').value.trim();if(!q||!a){alert('Isi pertanyaan dan jawaban terlebih dahulu.');return}if(usedQuestions.includes(q)){alert('Pertanyaan ini sudah dipakai. Buat pertanyaan yang berbeda.');return}question=q;answer=a.toLowerCase();currentClue='Petunjuk: jawaban terdiri dari '+a.length+' karakter.';usedQuestions.push(q);showQuestion()}
+function showQuestion(){$('hostForm').classList.add('hidden');$('questionArea').classList.remove('hidden');$('resultArea').classList.add('hidden');$('questionText').textContent=question;$('status').textContent='Pertanyaan sudah siap! Jawab sebelum waktu habis.';roundActive=true;turnCount=0;answererIndex=nextNonHost(hostIndex,hostIndex);if(answererIndex<0){$('status').textContent='Tidak ada pemain yang bisa menjawab.';return}setAnswerer();startedAt=Date.now();updateTimer();timerHandle=setInterval(updateTimer,250);updateStats()}
+function setAnswerer(){if(answererIndex<0)return;$('answererName').textContent=players[answererIndex].name;$('guessInput').value='';$('guessInput').placeholder=players[answererIndex].ai?'AI sedang menjawab…':'Ketik jawaban…';$('guessInput').disabled=players[answererIndex].ai;$('players').innerHTML='';players.forEach((p,i)=>{let d=document.createElement('div');d.className='player'+(i===answererIndex?' active':'');d.innerHTML='<div class="emoji">'+p.emoji+'</div><b></b><div class="tiny">'+(i===hostIndex?'HOST':(i===answererIndex?'MENJAWAB':'PEMAIN'))+'</div><div class="tiny">Poin '+p.score+' • EXP '+p.exp+'</div>';d.querySelector('b').textContent=p.name;$('players').append(d)});if(players[answererIndex].ai){setTimeout(()=>{if(roundActive&&players[answererIndex].ai){let correct=Math.random()<.72;resolveAnswer(correct?answer:'jawaban salah',true)}},1200)}}
+function updateTimer(){if(!roundActive)return;let sec=Math.floor((Date.now()-startedAt)/1000);$('timer').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}
+function submitGuess(){if(!roundActive||answererIndex<0)return;let guess=$('guessInput').value.trim();if(!guess){alert('Masukkan jawaban dulu.');return}resolveAnswer(guess,true)}
+function normalize(s){return s.toLowerCase().trim().replace(/[.,!?]/g,'').replace(/\s+/g,' ')}
+function resolveAnswer(value,submitted){if(!roundActive)return;let correct=normalize(value)===normalize(answer);let elapsed=(Date.now()-startedAt)/1000;clearInterval(timerHandle);roundActive=false;let p=players[answererIndex];p.emoji=correct?'✅':'❌';let gainedP=0,gainedE=0;if(correct){if(elapsed<=60){gainedP=20;gainedE=10}else if(elapsed<=90){gainedP=18;gainedE=10}else if(elapsed<=120){gainedP=16;gainedE=9}else if(elapsed<=150){gainedP=13;gainedE=8}else if(elapsed<=180){gainedP=10;gainedE=8}else{gainedP=4;gainedE=1}points+=gainedP;exp+=gainedE;p.score+=gainedP;p.exp+=gainedE}
+ $('feedback').classList.remove('hidden');$('feedback').textContent=correct?'✅ '+p.name+' benar! +'+gainedP+' poin, +'+gainedE+' EXP.':'❌ '+p.name+' salah. Jawaban yang benar: '+answer;
+ $('status').textContent=correct?'Jawaban benar!':'Jawaban salah.';$('questionArea').classList.add('hidden');$('resultArea').classList.remove('hidden');$('resultText').textContent=correct?'🎉 '+p.name+' menjawab dengan benar dalam '+elapsed.toFixed(1)+' detik. Hadiah: '+gainedP+' poin dan '+gainedE+' EXP.':'Jawaban yang benar adalah: '+answer+'. Tidak ada poin atau EXP untuk jawaban salah.';updateStats()}
+function nextRound(){round++;players.forEach(p=>{p.emoji='⏳'});startRound(true);updateStats()}
+function showShop(){homeReturn=$('game').classList.contains('hidden')?'home':'game';if(homeReturn==='home'&&$('game').classList.contains('hidden')){if(!players.length){alert('Mulai permainan dulu untuk memakai pasar.');return}}hideAll();$('market').classList.remove('hidden');updateStats()}
+function closeShop(){hideAll();$(homeReturn).classList.remove('hidden');updateStats()}
+function useItem(kind){if(!players.length){alert('Mulai permainan dulu.');return}
+ if(kind==='lamp'){if(points<5)return alert('Poin tidak cukup.');if(!question||!answer)return alert('Belum ada pertanyaan aktif.');points-=5;alert('💡 Jawaban yang benar: '+answer);updateStats();return}
+ if(kind==='clue'){if(points<8)return alert('Poin tidak cukup.');if(!question||!answer)return alert('Belum ada pertanyaan aktif.');points-=8;let clue=currentClue||('Jawaban terdiri dari '+answer.length+' karakter.');if(!$('questionArea').classList.contains('hidden')){$('clueBox').textContent='🔎 '+clue;$('clueBox').classList.remove('hidden')}else alert('🔎 '+clue);updateStats();return}
+ if(kind==='change'){if(points<13)return alert('Poin tidak cukup.');if(players[hostIndex]?.ai){alert('AI sudah membuat pertanyaan. Tekan lanjut putaran untuk mengacak host lagi.');return}if(!players[hostIndex])return alert('Belum ada host.');points-=13;roundActive=false;clearInterval(timerHandle);$('questionArea').classList.add('hidden');$('resultArea').classList.add('hidden');$('hostForm').classList.remove('hidden');$('questionInput').value='';$('answerInput').value='';$('status').textContent='Host, buat pertanyaan baru. Pertanyaan lama tidak boleh diulang.';question='';answer='';updateStats();closeShop();return}
+ if(kind==='skip'){if(points<18)return alert('Poin tidak cukup.');if(!roundActive||answererIndex<0)return alert('Skip hanya bisa dipakai saat giliran menjawab.');if(players[answererIndex].ai)return alert('Tunggu giliran pemain manusia.');points-=18;players[answererIndex].emoji='⏭️';let old=answererIndex;answererIndex=nextNonHost(old,old);if(answererIndex<0){alert('Tidak ada pemain berikutnya.');return}setAnswerer();updateStats();if(homeReturn==='game')closeShop();return}
+ if(kind==='reload'){if(exp<20)return alert('EXP tidak cukup.');exp-=20;round++;startRound(true);updateStats();if(!$('market').classList.contains('hidden'))closeShop();return}
+}
+renderNameFields();
+</script>
+</body>
+</html>
